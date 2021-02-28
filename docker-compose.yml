@@ -1,0 +1,37 @@
+version: "3"
+services:
+  auth:
+    build: ./nestjs-microservice-auth
+    ports:
+      # - 8876:8876
+      - 4020:4020
+    environment:
+      AUTH_HOST: auth
+      DB_NAME: "users"
+      DB_HOST: "db"
+      DB_USERNAME: "postgres"
+      DB_PASSWORD: "Arol3094"
+  browserprofile:
+    build: ./nestjs-microservice-browserprofile
+    ports:
+      # - 8876:8876
+      - 4010:4010
+    environment:
+      BROWSER_PROFILE_HOST: browserprofile
+      DB_NAME: "users"
+      DB_HOST: "db"
+      DB_USERNAME: "postgres"
+      DB_PASSWORD: "Arol3094"
+  db:
+    image: "postgres:12.1-alpine"
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "Arol3094"
+      POSTGRES_DB: "users"
+    healthcheck:
+      test: ["CMD-SHELL", "su -c 'pg_isready -U postgres' postgres"]
+      interval: 30s
+      timeout: 30s
+      retries: 3
+    restart: "on-failure"
+    ports: ["5555:5432"]
