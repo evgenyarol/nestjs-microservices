@@ -3,10 +3,9 @@ services:
   auth:
     build: ./nestjs-microservice-auth
     ports:
-      # - 8876:8876
-      - 4020:4020
+      - 3020:3020
     environment:
-      AUTH_HOST: auth
+      BROWSER_PROFILE_HOST: browserprofile
       DB_NAME: "users"
       DB_HOST: "db"
       DB_USERNAME: "postgres"
@@ -14,8 +13,7 @@ services:
   browserprofile:
     build: ./nestjs-microservice-browserprofile
     ports:
-      # - 8876:8876
-      - 4010:4010
+      - 3010:3010
     environment:
       BROWSER_PROFILE_HOST: browserprofile
       DB_NAME: "users"
@@ -24,6 +22,8 @@ services:
       DB_PASSWORD: "Arol3094"
   db:
     image: "postgres:12.1-alpine"
+    expose:
+      - "5432"
     environment:
       POSTGRES_USER: "postgres"
       POSTGRES_PASSWORD: "Arol3094"
@@ -34,4 +34,3 @@ services:
       timeout: 30s
       retries: 3
     restart: "on-failure"
-    ports: ["5555:5432"]
