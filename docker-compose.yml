@@ -5,7 +5,7 @@ services:
     ports:
       - 3020:3020
     environment:
-      BROWSER_PROFILE_HOST: browserprofile
+      AUTH_HOST: auth
       DB_NAME: "users"
       DB_HOST: "db"
       DB_USERNAME: "postgres"
