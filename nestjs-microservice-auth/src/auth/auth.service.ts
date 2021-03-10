@@ -6,6 +6,7 @@ import { Repository, InsertResult, FindConditions } from 'typeorm';
 import { TimeoutError, throwError } from 'rxjs';
 import { JwtService } from '@nestjs/jwt';
 import { User } from './auth.entity';
+import { AuthDto } from './dto/auth.dto';
 import * as shortid from 'shortid';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
@@ -38,42 +39,59 @@ export class AuthService {
     return await this.authRepository.findOne({ where: { email } });
   }
 
-  async findOneByUserName(username: string): Promise<User> {
+  async findOneByUserName(username: string): Promise<User | undefined> {
     return await this.authRepository.findOne({ where: { username } });
+  }
+
+  async updateUserById(id: number, user: User): Promise<any> {
+    return await this.authRepository.update(id, user);
   }
 
   async findOneByRefUrl(refUrl: string): Promise<User> {
     return await this.authRepository.findOne({ where: { refUrl } });
   }
 
-  async createUser(user: User): Promise<User> {
+  async register(user: User): Promise<AuthDto> {
     const pass = await this.hashPassword(user.password);
-    user.isEmailVerified = false
     user.refUrl = shortid.generate()
-    const newUser = await this.authRepository.save({ ...user, password: pass });
-    return newUser;
+    const register = await this.authRepository.save({ ...user, password: pass });
+    const payload = { user, sub: user.id };
+    const data = {
+      id: register.id,
+      username: register.username,
+      email: register.email,
+      telegram: register.telegram,
+      accessToken: this.jwtService.sign(payload)
+    }
+    return data
   }
 
-  async createUserWithRef(user: User, refUrl: string): Promise<User> {
+  async registerWithRef(user: User, refUrl: string): Promise<AuthDto> {
     const ref = await this.findOneByRefUrl(refUrl)
     if (ref) {
       console.log(ref)
       const pass = await this.hashPassword(user.password);
       user.isEmailVerified = false
       user.refUrl = shortid.generate()
-      const newUser = await this.authRepository.save({ ...user, password: pass });
-      return newUser;
-    } else return null
+      const register = await this.authRepository.save({ ...user, password: pass });
+      const payload = { user, sub: user.id };
+      const data = {
+        id: register.id,
+        username: register.username,
+        email: register.email,
+        telegram: register.telegram,
+        accessToken: this.jwtService.sign(payload)
+      }
+      return data
+    }
+    else return null
   }
 
   async login(user) {
-    if (user.isEmailVerified !== false) {
-      const payload = { user, sub: user.id };
-      return {
-        userId: user.id,
-        accessToken: this.jwtService.sign(payload)
-      };
-    } else return { err: "Email not Verified " }
+    const payload = { username: user.username, sub: user.id };
+    return {
+      access_token: this.jwtService.sign(payload),
+    };
   }
 
   validateToken(jwt: string) {
@@ -83,10 +101,6 @@ export class AuthService {
   private async hashPassword(password) {
     const hash = await bcrypt.hash(password, 10);
     return hash;
-  }
-
-  async findOneById(id: number): Promise<User> {
-    return await this.authRepository.findOne({ where: { id } });
   }
 
 }
