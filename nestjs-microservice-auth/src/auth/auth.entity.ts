@@ -12,8 +12,26 @@ export class User implements AuthInterface {
   @Column()
   username: string;
 
+  @Column({ default: null, nullable: true })
+  firstName: string;
+
+  @Column({ default: null, nullable: true })
+  lastName: string;
+
+  @Column({ default: null, nullable: true })
+  profession: string;
+
+  @Column({ default: null, nullable: true })
+  avatar: string;
+
   @Column()
   refUrl: string;
+
+  @Column()
+  telegram: string;
+
+  @Column({ default: 0, nullable: true })
+  balance: number;
 
   @Column()
   @Min(8)
@@ -26,8 +44,8 @@ export class User implements AuthInterface {
   @CreateDateColumn()
   createdAt: Date;
 
-  @Column()
-  isEmailVerified: false;
+  @Column({ default: false, nullable: true })
+  isEmailVerified: boolean;
 
   @BeforeInsert()
   async hashPassword() {
