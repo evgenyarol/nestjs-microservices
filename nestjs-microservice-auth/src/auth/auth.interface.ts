@@ -12,7 +12,3 @@ export interface AuthInterface {
   telegram: string;
   balance: number;
 }
-
-
-//Access Key ID:AKIAIE6IJHPEO346SJ7Q
-//Secret Access Key: 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
