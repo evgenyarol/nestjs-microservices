@@ -61,6 +61,7 @@ export class AuthService {
       login: register.login,
       email: register.email,
       telegram: register.telegram,
+      subUserId : register.subUserId || null,
       accessToken: this.jwtService.sign(payload)
     }
     return data
