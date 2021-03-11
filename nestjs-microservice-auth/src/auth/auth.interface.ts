@@ -1,6 +1,6 @@
 export interface AuthInterface {
   id: number;
-  username: string;
+  login: string;
   firstName: string;
   lastName: string;
   password: string;
@@ -11,4 +11,6 @@ export interface AuthInterface {
   avatar: string;
   telegram: string;
   balance: number;
+  role: string;
+  subUserId: number;
 }

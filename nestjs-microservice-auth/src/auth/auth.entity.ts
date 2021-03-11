@@ -10,7 +10,7 @@ export class User implements AuthInterface {
   id: number;
 
   @Column()
-  username: string;
+  login: string;
 
   @Column({ default: null, nullable: true })
   firstName: string;
@@ -32,6 +32,12 @@ export class User implements AuthInterface {
 
   @Column({ default: 0, nullable: true })
   balance: number;
+
+  @Column({ default: null, nullable: true })
+  role: string;
+
+  @Column({ default: null, nullable: true })
+  subUserId: number;
 
   @Column()
   @Min(8)
