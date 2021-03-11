@@ -19,9 +19,9 @@ export class AuthService {
     @InjectRepository(User)
     private readonly authRepository: Repository<User>) { }
 
-  async validateUser(username: string, password: string): Promise<any> {
+  async validateUser(email: string, password: string): Promise<any> {
     try {
-      const user = await this.findOneByUserName(username);
+      const user = await this.findOneByEmail(email);
       if (!user) {
         return null;
       }
@@ -39,8 +39,8 @@ export class AuthService {
     return await this.authRepository.findOne({ where: { email } });
   }
 
-  async findOneByUserName(username: string): Promise<User | undefined> {
-    return await this.authRepository.findOne({ where: { username } });
+  async findOneByLogin(login: string): Promise<User | undefined> {
+    return await this.authRepository.findOne({ where: { login } });
   }
 
   async updateUserById(id: number, user: User): Promise<any> {
@@ -58,7 +58,7 @@ export class AuthService {
     const payload = { user, sub: user.id };
     const data = {
       id: register.id,
-      username: register.username,
+      login: register.login,
       email: register.email,
       telegram: register.telegram,
       accessToken: this.jwtService.sign(payload)
@@ -71,13 +71,12 @@ export class AuthService {
     if (ref) {
       console.log(ref)
       const pass = await this.hashPassword(user.password);
-      user.isEmailVerified = false
       user.refUrl = shortid.generate()
       const register = await this.authRepository.save({ ...user, password: pass });
       const payload = { user, sub: user.id };
       const data = {
         id: register.id,
-        username: register.username,
+        login: register.login,
         email: register.email,
         telegram: register.telegram,
         accessToken: this.jwtService.sign(payload)
@@ -88,7 +87,7 @@ export class AuthService {
   }
 
   async login(user) {
-    const payload = { username: user.username, sub: user.id };
+    const payload = { email: user.email, sub: user.id };
     return {
       access_token: this.jwtService.sign(payload),
     };
