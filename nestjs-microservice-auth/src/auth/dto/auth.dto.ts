@@ -1,6 +1,6 @@
 export interface AuthDto {
     id: number
-    username: string
+    login: string
     email: string
     accessToken: string
   }
