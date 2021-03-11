@@ -21,8 +21,8 @@ export class AuthController {
 
   @UseGuards(DoesUserExist)
   @Post('signup/:refUrl')
-  async signUpWithRef(@Request() req, @Body() user: User) {
-    const refUrl = req.params.refUrl
+  async signUpWithRef(@Request() request, @Body() user: User) {
+    const refUrl = request.params.refUrl
     return this.authService.registerWithRef(user, refUrl);
   }
 
