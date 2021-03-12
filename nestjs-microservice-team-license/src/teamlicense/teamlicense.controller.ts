@@ -10,7 +10,7 @@ export class TeamLicenseController {
     private readonly teamLicenseService: TeamLicenseService,
   ) { }
 
-  // BrowserProfile
+  // TeamLicense
   @Get('teamlicense/:id')
   async getTeamLicense(@Request() request) {
     const id = request.params.id
@@ -18,12 +18,12 @@ export class TeamLicenseController {
   }
 
   @Post('teamlicense')
-  async saveBrowserProfile(@Body() teamLicense: TeamLicense) {
+  async saveTeamLicense(@Body() teamLicense: TeamLicense) {
     return this.teamLicenseService.saveTeamLicense(teamLicense);
   }
 
   @Put('teamlicense/:id')
-  updateGeo(@Param('id') id: number, @Body() teamLicense: TeamLicense, @Response() response) {
+  async updateTeamLicense(@Param('id') id: number, @Body() teamLicense: TeamLicense, @Response() response) {
     this.teamLicenseService.updateTeamLicenseById(id, teamLicense);
     response.json(teamLicense)
   }
