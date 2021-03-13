@@ -1,11 +1,17 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, Inject, RequestTimeoutException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { ClientProxy } from '@nestjs/microservices';
+import { timeout, catchError } from 'rxjs/operators';
+import { TimeoutError, throwError } from 'rxjs';
 import { Repository } from 'typeorm';
 import { Team } from './team.entity';
 
 @Injectable()
 export class TeamService {
     constructor(
+        @Inject('AUTH_CLIENT')
+        @Inject('TEAM_LICENSE_CLIENT')
+        private readonly client: ClientProxy,
         @InjectRepository(Team)
         private readonly teamRepository: Repository<Team>
     ) { }
@@ -15,15 +21,29 @@ export class TeamService {
     }
 
     async getTeamById(id: number): Promise<Team> {
-        const team = await this.teamRepository.findOne({ where: { id } }); 
-        if (!team) {
-            return null
+        try {
+            const team = await this.teamRepository.findOne({ where: { id } })
+            //team.teamLicenseId = await this.client.send({ role: 'team_license', cmd: 'get' }, team.teamLicenseId)
+            team.creatorId = await this.client.send({ role: 'user', cmd: 'get' }, +team.creatorId)
+                .pipe(
+                    timeout(5000),
+                    catchError(err => {
+                        if (err instanceof TimeoutError) {
+                            return throwError(new RequestTimeoutException());
+                        }
+                        return throwError(err);
+                    }))
+                .toPromise();
+            return team
         }
-        return team
+        catch (e) {
+            Logger.log(e);
+            throw e;
+        }
     }
 
-    async updateTeamById(id : number, team: Team): Promise<any> {
+    async updateTeamById(id: number, team: Team): Promise<any> {
         return await this.teamRepository.update(id, team);
     }
-    
+
 }

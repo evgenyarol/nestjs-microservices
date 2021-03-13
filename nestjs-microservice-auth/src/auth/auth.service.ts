@@ -43,6 +43,9 @@ export class AuthService {
     return await this.authRepository.findOne({ where: { login } });
   }
 
+  findOneById(id: any): Promise<User> {
+    return this.authRepository.findOne({ where: { id } });
+  }
   async updateUserById(id: number, user: User): Promise<any> {
     return await this.authRepository.update(id, user);
   }

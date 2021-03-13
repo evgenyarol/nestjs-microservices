@@ -15,7 +15,16 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
         host: 'localhost',
         port: 4020
       }
-    }])
+    },
+    {
+      name: 'TEAM_LICENSE_CLIENT',
+      transport: Transport.TCP,
+      options: {
+        host: 'localhost',
+        port: 4030
+      }
+    },
+  ])
   ],
   providers: [
     TeamService,

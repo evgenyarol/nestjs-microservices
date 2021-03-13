@@ -31,4 +31,8 @@ export class TeamLicenseController {
     response.json(teamLicense)
   }
 
+  @MessagePattern({ role: 'team_license', cmd: 'get' })
+  async getProfileById(id): Promise<TeamLicense> {
+    return this.teamLicenseService.getTeamLicenseById(id);
+  }
 }

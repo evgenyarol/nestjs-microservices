@@ -66,6 +66,11 @@ export class AuthController {
     return request.user;
   }
 
+  @MessagePattern({ role: 'user', cmd: 'get' })
+  async getProfileById(id): Promise<User> {
+    return this.authService.findOneById(id);
+  }
+
 
   @MessagePattern({ role: 'auth', cmd: 'check' })
   async loggedIn(data) {
