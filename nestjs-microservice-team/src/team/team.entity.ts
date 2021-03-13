@@ -15,8 +15,8 @@ export class Team implements TeamInterface {
   @Column()
   teamLicenseId: number;
 
-  @Column()
-  subUsersIds: [];
+  @Column({ array: true })
+  subUsersIds: number;
 
   @CreateDateColumn()
   createdAt: Date;

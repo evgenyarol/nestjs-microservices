@@ -3,4 +3,5 @@ export interface TeamLicenseInterface {
   maxProfiles: number;
   dieTo: string;
   maxSubAccounts: number;
+  creatorId : number;
 }

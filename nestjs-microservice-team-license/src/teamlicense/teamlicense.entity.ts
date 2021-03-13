@@ -15,6 +15,9 @@ export class TeamLicense implements TeamLicenseInterface {
   @Column()
   maxSubAccounts: number;
 
+  @Column()
+  creatorId: number;
+
   @CreateDateColumn()
   createdAt: Date;
 }
