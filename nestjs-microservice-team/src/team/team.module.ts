@@ -8,6 +8,14 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
 @Module({
   imports: [
     TypeOrmModule.forFeature([Team]),
+    ClientsModule.register([{
+      name: 'AUTH_CLIENT',
+      transport: Transport.TCP,
+      options: {
+        host: 'localhost',
+        port: 4020
+      }
+    }])
   ],
   providers: [
     TeamService,
