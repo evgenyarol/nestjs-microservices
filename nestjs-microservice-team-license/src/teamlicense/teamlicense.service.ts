@@ -46,9 +46,9 @@ export class TeamLicenseService {
 
     }
 
-    async getTeamLicenseById(id: number): Promise<TeamLicense> {
+    async getTeamLicenseByIdWithCreatorId(id: number): Promise<TeamLicense> {
+        const result = await this.teamLicenseRepository.findOne({ where: { id } })
         try {
-            const result = await this.teamLicenseRepository.findOne({ where: { id } })
             result.creatorId = await this.client.send({ role: 'user', cmd: 'get' }, +result.creatorId)
                 .pipe(
                     timeout(5000),
@@ -65,6 +65,10 @@ export class TeamLicenseService {
             Logger.log(e);
             throw e;
         }
+    }
+
+    async getTeamLicenseById(id: number): Promise<TeamLicense> {
+        return await this.teamLicenseRepository.findOne({ where: { id } })
     }
 
     async updateTeamLicenseById(id: number, teamLicense: TeamLicense): Promise<any> {

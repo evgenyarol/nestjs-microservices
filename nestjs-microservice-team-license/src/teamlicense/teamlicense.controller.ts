@@ -15,7 +15,7 @@ export class TeamLicenseController {
   @UseGuards(JwtAuthGuard)
   async getTeamLicense(@Request() request) {
     const id = request.params.id
-    return await this.teamLicenseService.getTeamLicenseById(id)
+    return await this.teamLicenseService.getTeamLicenseByIdWithCreatorId(id)
   }
   
   @Post('teamlicense')
