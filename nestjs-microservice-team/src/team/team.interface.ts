@@ -3,5 +3,5 @@ export interface TeamInterface {
   name: string;
   creatorId: number;
   teamLicenseId: number;
-  subUsersIds: number;
+  subUsersIds: number[];
 }
