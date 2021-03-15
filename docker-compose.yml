@@ -20,6 +20,26 @@ services:
       DB_HOST: "db"
       DB_USERNAME: "postgres"
       DB_PASSWORD: "Arol3094"
+  team:
+    build: ./nestjs-microservice-team
+    ports:
+      - 3030:3030
+    environment:
+      TEAM_HOST: team_host
+      DB_NAME: "users"
+      DB_HOST: "db"
+      DB_USERNAME: "postgres"
+      DB_PASSWORD: "Arol3094"
+  teamlicense:
+    build: ./nestjs-microservice-team-license
+    ports:
+      - 3040:3040
+    environment:
+      TEAM_LICENSE_HOST: team_license_host
+      DB_NAME: "users"
+      DB_HOST: "db"
+      DB_USERNAME: "postgres"
+      DB_PASSWORD: "Arol3094"
   db:
     image: "postgres:12.1-alpine"
     expose:
