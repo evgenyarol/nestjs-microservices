@@ -5,7 +5,7 @@ COPY . .
 RUN npm install
 RUN npm run build
 
-EXPOSE 4020
-EXPOSE 3010
+EXPOSE 4040
+EXPOSE 3040
 
 CMD ["npm", "run", "start"]
