@@ -25,7 +25,7 @@ services:
     ports:
       - 3030:3030
     environment:
-      TEAM_HOST: team_host
+      TEAM_HOST: team
       DB_NAME: "users"
       DB_HOST: "db"
       DB_USERNAME: "postgres"
@@ -35,7 +35,7 @@ services:
     ports:
       - 3040:3040
     environment:
-      TEAM_LICENSE_HOST: team_license_host
+      TEAM_LICENSE_HOST: team_license
       DB_NAME: "users"
       DB_HOST: "db"
       DB_USERNAME: "postgres"
