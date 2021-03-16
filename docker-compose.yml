@@ -42,6 +42,8 @@ services:
       DB_PASSWORD: "Arol3094"
   db:
     image: "postgres:12.1-alpine"
+    ports:
+      - 5434:5432
     expose:
       - "5432"
     environment:
