@@ -59,11 +59,11 @@ export class AuthController {
   }
 
 
-  // Test
-  @Get('whoami')
+  // Get Me
+  @Get('getMe')
   @UseGuards(JwtAuthGuard)
   public async testAuth(@Request() request: any): Promise<any> {
-    return request.user;
+    return this.authService.findOneById(request.user.id);
   }
 
   @MessagePattern({ role: 'user', cmd: 'get' })
