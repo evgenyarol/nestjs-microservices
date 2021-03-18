@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Put, Param, UseGuards, Request, Logger, Response, Get } from '@nestjs/common';
+import { Controller, Post, Body, Put, Param, UseGuards, Request, Logger, Response, Get, HttpCode } from '@nestjs/common';
 import { LocalAuthGuard } from './local-auth.guard';
 import { AuthService } from './auth.service';
 import { MessagePattern } from '@nestjs/microservices';
@@ -12,25 +12,42 @@ export class AuthController {
   constructor(
     private readonly authService: AuthService) { }
 
-  // Sign In
+  // Sign Up
   @UseGuards(DoesUserExist)
   @Post('signup')
   async signUp(@Body() user: User) {
-    return this.authService.register(user);
+    try {
+      return this.authService.register(user);
+    } catch (error) {
+      Logger.log(error);
+      return false;
+    }
   }
 
   @UseGuards(DoesUserExist)
   @Post('signup/:refUrl')
   async signUpWithRef(@Request() request, @Body() user: User) {
-    const refUrl = request.params.refUrl
-    return this.authService.registerWithRef(user, refUrl);
+    try {
+      const refUrl = request.params.refUrl
+      return this.authService.registerWithRef(user, refUrl);
+    } catch (error) {
+      Logger.log(error);
+      return false;
+    }
   }
 
-  // Sign Up
+  // Sign In
   @UseGuards(LocalAuthGuard)
   @Post('signin')
+  @HttpCode(200)
   async signIn(@Request() request) {
-    return this.authService.login(request.user);
+    try {
+      return this.authService.login(request.user);
+    }
+    catch (error) {
+      Logger.log(error);
+      return false;
+    }
   }
 
   // Update avatar
@@ -54,8 +71,13 @@ export class AuthController {
   @Put('profile/:id')
   @UseGuards(JwtAuthGuard)
   async updateProfile(@Param('id') id: number, @Body() user: User, @Response() response) {
-    this.authService.updateUserById(id, user)
-    return response.json(user);
+    try {
+      this.authService.updateUserById(id, user)
+      return response.json(user);
+    } catch (error) {
+      Logger.log(error);
+      return false;
+    }
   }
 
 
@@ -63,7 +85,12 @@ export class AuthController {
   @Get('getMe')
   @UseGuards(JwtAuthGuard)
   public async testAuth(@Request() request: any): Promise<any> {
-    return this.authService.findOneById(request.user.id);
+    try {
+      return this.authService.findOneById(request.user.id);
+    } catch (error) {
+      Logger.log(error);
+      return false;
+    }
   }
 
   @MessagePattern({ role: 'user', cmd: 'get' })
