@@ -54,17 +54,23 @@ export class AuthController {
   @Put('profile/avatar/:id')
   @UseGuards(JwtAuthGuard)
   async updateProfileAvatar(@Param('id') id: number, @Body() user: User, @Response() response, @Request() request) {
-    const singleUpload = upload.single("avatar");
-    await singleUpload(request, response, (err) => {
-      if (err) {
-        return response.status(422).send({
-          errors: [{ title: "File Upload Error", detail: err.message }]
-        });
-      }
-      user.avatar = request.file.location
-      this.authService.updateUserById(id, user)
-      return response.json(user);
-    });
+    try {
+      const singleUpload = upload.single("avatar");
+      await singleUpload(request, response, (err) => {
+        if (err) {
+          return response.status(422).send({
+            errors: [{ title: "File Upload Error", detail: err.message }]
+          });
+        }
+        user.avatar = request.file.location
+        this.authService.updateUserById(id, user)
+        return response.json(user);
+      });
+    } catch (error) {
+      Logger.log(error);
+      return false;
+    }
+
   }
 
   // Update profile

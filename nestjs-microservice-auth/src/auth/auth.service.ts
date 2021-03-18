@@ -59,7 +59,6 @@ export class AuthService {
     user.refUrl = shortid.generate()
     const register = await this.authRepository.save({ ...user, password: pass });
     const payload = { email: user.email, sub: register.id };
-    console.log(payload)
     const data = {
       id: register.id,
       login: register.login,
@@ -78,7 +77,7 @@ export class AuthService {
       const pass = await this.hashPassword(user.password);
       user.refUrl = shortid.generate()
       const register = await this.authRepository.save({ ...user, password: pass });
-      const payload = { email: user.email, sub: user.id };
+      const payload = { email: user.email, sub: register.id };
       console.log(payload)
       const data = {
         id: register.id,
