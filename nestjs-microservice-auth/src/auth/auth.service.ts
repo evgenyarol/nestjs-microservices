@@ -10,7 +10,7 @@ import { AuthDto } from './dto/auth.dto';
 import * as shortid from 'shortid';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
-
+import * as nodemailer from 'nodemailer';
 
 @Injectable()
 export class AuthService {
@@ -67,6 +67,23 @@ export class AuthService {
       subUserId: register.subUserId || null,
       accessToken: this.jwtService.sign(payload)
     }
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: 'aezakmitestaezakmi@gmail.com',
+        pass: 'AEZAKMITESTPASS'
+      }
+    });
+    const result = await transporter.sendMail({
+      from: '"Test" <aezakmitestaezakmi@gmail.com>',
+      to: register.email,
+      subject: "Авторизация",
+      text: "Тестовая Авторизация",
+      html: ""
+    });
+
+    console.log(result);
+
     return data
   }
 
@@ -78,7 +95,6 @@ export class AuthService {
       user.refUrl = shortid.generate()
       const register = await this.authRepository.save({ ...user, password: pass });
       const payload = { email: user.email, sub: register.id };
-      console.log(payload)
       const data = {
         id: register.id,
         login: register.login,
@@ -86,6 +102,24 @@ export class AuthService {
         telegram: register.telegram,
         accessToken: this.jwtService.sign(payload)
       }
+      const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: 'aezakmitestaezakmi@gmail.com',
+          pass: 'Arol3094'
+        }
+      });
+
+      const result = await transporter.sendMail({
+        from: '"Test" <aezakmitestaezakmi@gmail.com>',
+        to: register.email,
+        subject: "Авторизация",
+        text: "Тестовая Авторизация",
+        html: ""
+      });
+
+      console.log(result);
+
       return data
     }
     else return null
